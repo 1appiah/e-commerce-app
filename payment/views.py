@@ -183,7 +183,7 @@ def verify_payment(request,ref):
         obj.is_verified = True
         obj.save()
         invoice = Invoice(ref=ref,order_id=obj.pk,amount=obj.amount_paid)
-        invoice.name = request.user.user.shippingaddress_set.full_name
+        invoice.name = obj.full_name
         invoice.save()
 
         messages.success(request,"Payment Verified. A Dispatch rider is coming soon")
