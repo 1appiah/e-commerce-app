@@ -1,0 +1,121 @@
+
+
+{% extends "partials/base.html" %}
+
+{% block title %}
+WishList
+{% endblock title %}
+
+{% block content %}
+<header class="w3-padding-large w3-center w3-black">
+    <h1 class="w3-center w3-text-white">Your Wishlist</h1>
+    <h6 class="w3-text-grey">View Your WishList...</h6>
+</header>
+{% if messages %}
+{% for message in messages %}
+    <div class=" w3-center">
+        <h4 class="w3-light-green w3-right w3-padding" style="width:30%"><span>{{message}}</span> <span class="w3-button w3-red w3-right" onclick="this.parentElement.style.display='none' ">&times</span></h4>
+    </div>
+    
+{% endfor %}
+{% endif %}
+
+{% if wishlist %}
+{% for item in wishlist.products.all %}
+<div class="w3-content">
+<div class=" w3-row w3-border w3-section">
+    <div class="w3-third">
+        <img src={{item.image.url}} alt="product_image" style="width:100%;"/>
+    </div>
+    <div class="w3-twothird w3-padding-large w3-center">
+        <h2>{{item.name}}</h2>
+        <h4>${{item.price}}</h4>
+        <div class="w3-section w3-content" style="max-width:200px">
+        </div>
+        <a class="w3-button w3-border w3-grey" href="{% url 'product-detail' item.id %}">View</a>
+        <button type="button" class="w3-button w3-border w3-pink w3-round-xxlarge remove-product" data-index="{{item.id}}">remove</button>
+        <button type="button" class="add-cart w3-button w3-border w3-teal w3-round-xxlarge" data-index="{{item.id}}">add to cart</button>
+    </div>
+</div>
+</div>
+{% endfor %}
+
+{% else %}
+<div class="w3-container w3-padding-large">
+    <h2>There is nothing in your wishlist</h2>
+</div>
+{% endif %}
+
+<script>
+    // update cart
+    $(document).on('click','.update-cart',function(e){
+         e.preventDefault();
+         // grab product id
+         var productid =$(this).data('index');
+         $.ajax({
+             type: 'POST',
+             url:"{% url 'cart-update' %}",
+             data: {
+                 product_id: $(this).data('index'),
+                 product_qty:$('#select'+ productid + ' option:selected').text(),
+                 csrfmiddlewaretoken: '{{ csrf_token }}',
+                 action:'post'
+             },
+             success:function(json){
+                location.reload()
+             },
+             error: function(xhr,errmsg,err){
+ 
+             }
+         });
+    })
+    
+    // delete product from cart
+    $(document).on('click','.remove-product',function(e){
+        e.preventDefault();
+        // grab product id
+        $.ajax({
+            type: 'POST',
+            url:"{% url 'remove-from-wishlist' %}",
+            data: {
+                product_id: $(this).data('index'),
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action:'post'
+            },
+            success:function(json){
+               location.reload()
+            },
+            error: function(xhr,errmsg,err){
+
+            }
+        });
+   })
+// add to cart
+   $(document).on('click','.add-cart',function(e){
+    e.preventDefault();
+    $.ajax({
+        type: 'POST',
+        url:"{% url 'cart-add' %}",
+        data: {
+            product_id: $(this).data('index'),
+            product_qty:1,
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            action:'post'
+        },
+        success:function(json){
+            //alert(json.qty)
+            //console .log(json)
+          // document.getElementById("cart_quantit").textContent = json.qty
+          location.reload();
+        },
+        error: function(xhr,errmsg,err){
+
+        }
+    });
+})
+ 
+ </script>
+
+{% endblock content %} 
+
+

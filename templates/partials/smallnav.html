@@ -1,0 +1,32 @@
+
+
+
+<div class="w3-bar w3-padding w3-hover-white w3-bottom w3-hide-medium w3-hide-large w3-teal" style="">
+    <a href="{% url 'home' %}" class="w3-bar-item w3-button">PerditorStore</a>
+    {% if user.is_authenticated %}
+      
+      <a href="{% url 'view-wishlist' %}" class="w3-bar-item w3-right w3-button">wishes
+        <span id="" class="w3-tag">{{num_wishlist}}
+      </span></a>
+    {% else %}
+      
+      <a href="{% url "account_login" %}" class="w3-bar-item w3-right w3-button">login</a>
+    {% endif %}
+
+    <a href="{% url 'cart-summary' %}" class="w3-bar-item w3-right w3-button">cart
+      <span id="cart_quantit" class="w3-tag">{{cart|length}}
+    </span></a>
+
+
+    
+</div>
+
+
+
+
+
+
+
+
+
+

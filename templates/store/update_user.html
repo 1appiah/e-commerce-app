@@ -1,0 +1,34 @@
+{% extends "partials/base.html" %}
+
+{% block title %}Profile{% endblock title %}
+{% block content %}
+<header class="w3-padding-large w3-center w3-black">
+    <h1 class="w3-center w3-text-white">Pollen N Pearls</h1>
+    <h6 class="w3-text-grey">With you every step of the walk</h6>
+</header>
+<div class="w3-center">
+    <h1 class="w3-center">{{pro}}</h1>
+</div>
+<div class="w3-content">
+    <div class="w3-row-padding">
+        <div class="w3-half">
+           <h3>Profile Information Information</h3>
+           <form method="POST" action={% url "update-profile" %}>
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit">Update</button>
+           </form> 
+        </div>
+        <div class="w3-half">
+            <h3>Shipping Information</h3>
+           <form method="POST" action={% url "update-shipping-address" %}>
+            {% csrf_token %}
+            {{form1.as_p}}
+            <button type="submit">Update</button>
+           </form> 
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

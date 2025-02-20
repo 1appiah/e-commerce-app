@@ -1,0 +1,53 @@
+{% extends 'partials/base.html' %}
+
+{% load widget_tweaks %}
+
+
+
+
+{% block content %}
+
+{% for message in messages %}{{message}}{% endfor %}
+<br>
+
+<div class="w3-modal-content w3-card" style="max-width: 660px;">
+    <div class="w3-center">
+        <br>
+        <h1>Create An Account</h1>
+    </div>
+    <form class="w3-container" method="POST">
+        {% csrf_token %}
+        <div class="w3-section">
+
+            <div class="w3-section">
+                {{form.username.errors|safe}}
+
+               <label for=""><b>Username</b></label>   
+               {% render_field form.username class="w3-input w3-border w3-margin-bottom" placeholder="Username here" %}
+                
+            </div>
+            <div class="w3-section">
+                <label for=""><b>Password</b></label>
+                
+               {% render_field form.password1 class="w3-input w3-border" placeholder="Password here" %}
+                
+            </div>
+            
+            <div class="w3-section">
+                {{form.password2.errors|safe}}
+                <label for=""><b>Password</b></label>
+               {% render_field form.password2 class="w3-input w3-border" placeholder="confirm password"%}
+                
+            </div>
+            <button class="w3-button w3-green w3-block w3-section">Register</button>
+            
+        </div>
+        
+        
+    </form>
+    <div class="w3-light-grey w3-border-top w3-padding-16 w3-container">
+       <a href="{% url 'account_login' %}"> <button class="w3-button w3-red">Login</button></a>
+        <span class="w3-hide w3-padding w3-right">Forgot <a href="">password?</a></span>
+    </div>
+</div>
+{% endblock content %}

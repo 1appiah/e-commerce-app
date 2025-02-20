@@ -1,0 +1,52 @@
+Order management
+    order tracking and history
+    automated email/sms notifications for order updates
+    invoice and receipt generation ---- on it
+    refund and return management
+
+User management
+    social login
+    user profile --- partially done
+
+Product and Inventory management
+    product categories, tags and filters
+    product variation(size,color and etc)
+    seo friendly product urls and description
+
+Shopping cart and checkout
+    coupons and discounts
+    shipping options and cost calculation
+
+Payment Integration
+    secure payment gateway -- done with paystack
+    buy now, pay later support
+
+Analytics and report 
+    Dashboard for tracking sales, orders and revenue
+    User behavior tracking(heatmaps,conversion tracking)
+    Sales and inventory report
+    Custom analytics with Django ORM and pandas
+
+Security
+     csrf protection and secure sessions
+     https and ssl enforcement
+     protection against sql injection and xss attacks
+     user permissions and role based access
+
+Search and Filtering
+    full text search with Elastic search or postgreSQL
+    faceted filtering(price range,brand,rating)
+    autosuggestion and autocomplete search
+
+Reviews and RAtings
+    customer reviews and ratings
+    admin moderation for reviews
+    verified purchase tag
+
+Shipping and logistics integration
+------
+
+PWA & mobile optimization
+     responsive web design
+     pwa support
+     mobile friendly checkout experience

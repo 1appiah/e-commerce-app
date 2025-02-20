@@ -1,0 +1,60 @@
+{% extends "partials/base.html" %}
+
+{% block title %}Shipped Orders{% endblock title %}
+{% block content %}
+<header class="w3-padding-large w3-center w3-black">
+    <h1 class="w3-center w3-text-white">Shipped Orders</h1>
+    <h6 class="w3-text-grey">With this shop homepage template</h6>
+</header>
+<div class="w3-content">
+    <h3>shipped Items</h3>
+    {% if request.user.is_superuser %}
+    <table class="w3-table-all w3-bordered w3-striped">
+        <thead>
+            <tr class="w3-black">
+                <th>Order</th> 
+                <th>Price</th>
+                <th>Customer Email</th>
+                <th>Date Shipped</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in shipped_orders %}
+            <tr>
+                
+                <td><a href="{% url 'order-detail' order.pk %}">{{order.pk}}</a></td>
+                <td>{{order.amount_paid}}</td>
+                <td>{{order.email}}</td>
+                <td>{{order.date_shipped}}</td>
+                <td><a href="{% url 'toggleship' order.pk %}" class="w3-button w3-tiny w3-border w3-red">Unship</a></td> 
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <table class="w3-table-all w3-bordered w3-striped">
+        <thead>
+            <tr class="w3-black">
+                <th>Order</th> 
+                <th>Price</th>
+                <th>Customer Email</th>
+                <th>Date Shipped</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in shipped_orders %}
+            {% if order.user == request.user %}
+            <tr>
+                
+                <td><a href="{% url 'order-detail' order.pk %}">{{order.pk}}</a></td>
+                <td>{{order.amount_paid}}</td>
+                <td>{{order.email}}</td>
+                <td>{{order.date_shipped}}</td> 
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock content %}

@@ -1,0 +1,79 @@
+{% extends "partials/base.html" %}
+
+{% block title %}Process order{% endblock title %}
+{% block content %}
+<header class="w3-padding-large w3-center w3-black">
+    <h1 class="w3-center w3-text-white">Process Order...</h1>
+    <h6 class="w3-text-grey">With this shop homepage template</h6>
+</header>
+<div class="w3-content">
+    <div>
+        <div  class="w3-gray"><h3>Order Summary</h3></div>
+        <table class="w3-table-all w3-border">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                </tr>
+            </thead>
+            <tbody>
+    {% for product in products %}
+                <tr>
+                    <td>{{product}}</td>
+                    <td>
+                        {% for key,value in quan.items %}
+                        {% if key == product.id|slugify %}
+                           <span> {{value}} </span>
+                        {% endif %}
+                        {% endfor %} 
+                    </td>
+                    <td>${{product.price}}</td>
+                </tr>
+    {% endfor %}
+
+            </tbody>
+            <tfooter>
+                <tr>
+                    <td></td>
+                    <td>Total Cost</td>
+                    <td>${{total}}  <a href="{% url 'cart-summary' %}">Update Item</a></td>
+                </tr>
+            </tfooter>
+        </table>
+    
+    </div>
+    <!--end of order summary-->
+    <div>
+        <h3>Shipping Info</h3>
+        <div class="w3-border">
+                {% csrf_token %}
+               
+         
+                Name: {{shipinfo.full_name}} <br>
+                Email:{{shipinfo.email}}<br>
+                Address 1:{{shipinfo.address1}}<br>
+                Address 2:{{shipinfo.address2}}<br>
+                Country:{{shipinfo.country}}<br>
+                Zipcode:{{shipinfo.zipcode}}
+                <hr>
+                <a href="{% url 'checkout' %}" class="w3-button w3-border">Update</a>
+                
+
+        </div>
+    </div>
+    <!--end of shipping info-->
+    <div>
+        <form class="w3-border" method="POST" action="{% url 'process_order' %}">
+            {% csrf_token %}
+            <h3>Billing Info</h3>
+            {{billing_form}}
+        <button>Pay Now</button>
+
+        </form>
+    </div>
+
+
+</div>
+    
+{% endblock content %}

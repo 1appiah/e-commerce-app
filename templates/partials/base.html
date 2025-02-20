@@ -1,0 +1,58 @@
+{% load static %}
+
+
+
+<html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+        <title>{% block title %}{% endblock title %}</title>
+        <meta name='description' content="online marketing platform">
+        <meta name='keywords' content="products,necklace,bracelet,earring,anklet,couple,men">
+        <meta name='author' content='ollen n pearl'>
+        <meta property='og:url' content='http://{{request.META.HTTP_HOST}}{{request.path}}'>
+        <meta property='og:title' content='{% block og-caption %}Product{% endblock og-caption %}'>
+        <meta property='og:description' content='{% block og-description %}bracelet,anklet,ring,beads{% endblock og-description %}'>
+
+
+        <link rel="stylesheet" href='{% static "css/w3.css" %}'>
+        <script src="{% static 'js/jquery.js' %}"></script>
+        {% block style %}
+        
+        {% endblock style %}
+    </head>
+    <body style="position:relative; height:auto">    
+{% include "partials/nav.html" %}
+{% include "partials/smallnav.html" %}
+
+
+
+{% block content %}
+
+{% endblock content %}
+<br><br>
+{% include "partials/footer.html" %}
+
+
+<script>
+    function myFunction() {
+      var x = document.getElementById("dropd");
+      if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+      } else { 
+        x.className = x.className.replace(" w3-show", "");
+      }
+    }
+    function myFunction1() {
+      var x = document.getElementById("ord");
+      if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+      } else { 
+        x.className = x.className.replace(" w3-show", "");
+      }
+    }
+    </script>
+    </body>
+    
+
+</html>

@@ -1,0 +1,183 @@
+{% extends "partials/base.html" %}
+{% load static %}
+{% block title %}
+Homepage
+{% endblock title %}
+{% block style %}
+<style>
+#hero{
+    height:800px;
+    background-image: url({% static 'img/shraddha_kapoor-1920x1080.jpg' %});
+    background-position: center center;
+    background-origin:border-box;
+    background-attachment:fixed;
+    animation: example 4s forwards;
+    background-color:light-blue;
+    z-index:-1
+}
+@-webkit-keyframes example {
+    from {opacity: 1; top:0px;}
+    to {opacity: 1; top:-20px;}
+  }
+  
+  /* Standard syntax */
+  @keyframes example {
+    from {opacity: 0.2; top:0px;}
+    to {opacity: 1; top:-120px;}
+  }
+</style>
+{% endblock style %}
+
+
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+<div class=" w3-center">
+    <h4 class="w3-light-green w3-right w3-padding" style="width:30%"><span>{{message}}</span> <span class="w3-button w3-red w3-right" onclick="this.parentElement.style.display='none' ">&times</span></h4>
+</div>
+{% endfor %}
+{% endif %}
+<div >
+    <div id="hero" class="w3-display-container">
+            <div class="w3-display-middle">
+                <h1 class="w3-animate-zoom w3-center w3-text-white w3-xxxlarge"><b>POLLEN <span class="w3-text-teal">&</span> PEARLS<b></h>
+                <h4 class="w3-hide-small w3-xxxlarge">The right match for your everyday wear</h4>
+            </div>
+    </div>
+</div>
+<!---->
+
+<div class="w3-border w3-border-red">
+    <h1 class="w3-center w3-animate-zoom "><b>LATEST PRODUCTS</b></h1>
+    <div class="w3-container w3-row-padding ">
+    {% for product in products %}
+        <div class=" w3-col s12 l4 w3-padding">
+            <div class="w3-round w3-section  w3-card">
+                <div class="w3-display-container">
+                    {% if product.is_sale %}
+                    <p class="w3-tag w3-display-topright w3-margin w3-brown">Sale</p>
+                    {% endif %}
+                    <img src="{{product.image.url}}" alt="" style="max-width:100%; height:400px" class="w3-round">
+                
+                </div>
+                <div class="w3-center w3-border w3-border-light-grey ">
+                    <h3 class="w3-text-black">{{product.name}}</h3>
+                    {% if product.is_sale %}                 
+                    <h5 class=""><s>${{product.price}}</s> &nbsp;${{product.sale_price}}</h5>
+                    {% else %}
+                    <h5 class="">${{product.price}}</h5>
+                    {% endif %}
+                    
+                    
+                    <a href="{% url 'product-detail' product.pk %}"><button class="w3-button w3-section w3-round-large w3-border w3-hover-black w3-center">View Product</button></a>
+                
+                </div> 
+            </div>
+        </div>
+        
+    {% endfor %}
+    
+    </div>
+    <h1 class="w3-center "><b class="w3-button w3-border w3-round-large">View All</b></h1>
+
+</div>
+<!--end for  latetst products-->
+
+<!--trends for school-->
+<div>
+    <h1 class="w3-center w3-animate-zoom w3-section"><b>Get Kid's Dapper</b></h1>
+    <div class="w3-container w3-row-padding ">
+    {% for product in kids %}
+        <div class=" w3-col s12 l4 w3-padding">
+            <div class="w3-round w3-section w3-card">
+                <div class="w3-display-container">
+                    {% if product.is_sale %}
+                    <p class="w3-tag w3-display-topright w3-margin w3-brown">Sale</p>
+                    {% endif %}
+                    <img src="{{product.image.url}}" alt="" style="max-width:100%;height:400px" class="w3-round">
+                
+                </div>
+                <div class="w3-center w3-border w3-border-light-grey ">
+                    <h3 class="w3-text-black">{{product.name}}</h3>
+                    {% if product.is_sale %}                 
+                    <h5 class=""><s>${{product.price}}</s> &nbsp;${{product.sale_price}}</h5>
+                    {% else %}
+                    <h5 class="">${{product.price}}</h5>
+                    {% endif %}
+                    
+                    
+                    <a href="{% url 'product-detail' product.pk %}"><button class="w3-button w3-section w3-round-large w3-border w3-hover-black w3-center">View Product</button></a>
+                
+                </div> 
+            </div>
+        </div>
+        
+    {% endfor %}
+    
+    </div>
+    <h1 class="w3-center "><b class="w3-button w3-border w3-round-large">View All</b></h1>
+
+</div>
+<!--end for  trends products-->
+<!--trans-->
+<div class="w3-row">
+    <div class="w3-half w3-display-container">
+        <img src="{% static "img/editee.jpg" %}" alt="vim" style="max-width:100%;"/>
+        <div class="w3-display-middle w3-display-hover w3-border w3-padding">
+            <h4 class="w3-animate-zoom w3-xxlarge"><b>Be Intentional...</b></h4>
+        </div>
+    </div>
+    <div class="w3-half w3-display-container ">
+        <img src="{% static "img/editee3.jpg" %}" alt="vim" style="max-width:100%;"/>
+        <div class="w3-display-middle w3-display-hover w3-border w3-padding">
+            <h4 class="w3-animate-zoom w3-xxlarge"><b>Taylor Swift...</b></h4>
+        </div>
+    </div>
+</div>
+<!--trans-->
+<!--couple goals-->
+
+<div>
+    <h1 class="w3-center w3-animate-zoom w3-section"><b>Couple Goals</b></h1>
+    <div class="w3-container w3-row-padding ">
+    {% for product in kids %}
+        <div class=" w3-col s12 l4 w3-padding">
+            <div class="w3-round w3-section w3-card">
+                <div class="w3-display-container">
+                    {% if product.is_sale %}
+                    <p class="w3-tag w3-display-topright w3-margin w3-brown">Sale</p>
+                    {% endif %}
+                    <img src="{{product.image.url}}" alt="" style="max-width:100%;height:400px" class="w3-round">
+                
+                </div>
+                <div class="w3-center w3-border w3-border-light-grey ">
+                    <h3 class="w3-text-black">{{product.name}}</h3>
+                    {% if product.is_sale %}                 
+                    <h5 class=""><s>${{product.price}}</s> &nbsp;${{product.sale_price}}</h5>
+                    {% else %}
+                    <h5 class="">${{product.price}}</h5>
+                    {% endif %}
+                    
+                    
+                    <a href="{% url 'product-detail' product.pk %}"><button class="w3-button w3-section w3-round-large w3-border w3-hover-black w3-center">View Product</button></a>
+                
+                </div> 
+            </div>
+        </div>
+        
+    {% endfor %}
+    
+    </div>
+    <h1 class="w3-center "><b class="w3-button w3-border w3-round-large">View All</b></h1>
+
+</div>
+<!-- end couple goals-->
+
+
+
+{% endblock content %} 
+
+
+
+

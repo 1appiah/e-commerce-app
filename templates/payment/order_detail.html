@@ -1,0 +1,59 @@
+{% extends "partials/base.html" %}
+
+
+{% block content %}
+<header class="w3-padding-large w3-center w3-black">
+    <h1 class="w3-center w3-text-white">Order Details</h1>
+    <h6 class="w3-text-grey">With this shop homepage template</h6>
+</header>
+<div class="w3-content">
+    <div>
+        <h2>Order Information</h2>
+        <p><span>Full Name:</span> <span>{{order.full_name}}</span></p>
+        <p><span>Email:</span> <span>{{order.email}}</span></p>
+        <p><span>Shipping Address:</span> <span>{{order.shipping_address}}</span></p>
+        <p><span>Cost:</span> <span>${{order.amount_paid}}</span></p>
+        <p><span>Order Date:</span> <span>{{order.date_ordered}}</span></p>
+        {% if order.shipped %}
+        <p><span>Shipped:</span> <span>Yes</span></p>
+        <p><span>Shipped Date:</span> <span>{{order.date_shipped}}</span></p>
+        {% else %}
+        <p><span>Shipped:</span> <span>Not Yet</span></p>
+        {% endif %}
+        {% if order.is_verified %}
+         <td>Paid: Yes</td>
+         {% else %}
+         <td>Paid: Pending</td>  
+         {% endif %} 
+    </div>
+    <div>
+        <h4>Item Details</h4>
+        
+        <table class="w3-table-all w3-bordered w3-striped" style="width:600px">
+            <thead>
+                <tr class="w3-black">
+                    <th>Item</th>
+                    <th>Unit Price</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+        {% for item in order_items %}
+                <tr>
+                    <td>{{item.product}}</td>
+                    <td>{{item.quantity}}</td>
+                    <td>{{item.price}}</td>
+                    </tr>
+        {% endfor %}
+            </tbody>
+        </table>
+        {% if request.user.is_superuser %}
+        {% if order.shipped %}
+        <a href="{% url 'toggleship' order.pk %}" class="w3-button w3-green w3-border">Mark As Not Shipped</a>
+        {% else %}
+        <a href="{% url 'toggleship' order.pk %}" class="w3-button w3-green w3-border">Mark As Shipped</a>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}
