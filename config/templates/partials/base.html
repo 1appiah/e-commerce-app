@@ -13,8 +13,8 @@
         <meta property='og:url' content='http://{{request.META.HTTP_HOST}}{{request.path}}'>
         <meta property='og:title' content='{% block og-caption %}Product{% endblock og-caption %}'>
         <meta property='og:description' content='{% block og-description %}bracelet,anklet,ring,beads{% endblock og-description %}'>
-
-
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
         <link rel="stylesheet" href='{% static "css/w3.css" %}'>
         <script src="{% static 'js/jquery.js' %}"></script>
         {% block style %}
