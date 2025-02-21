@@ -83,6 +83,7 @@ class OrderItems(models.Model):
 
 class Payment(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True,blank=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True,blank=True)
     amount = models.PositiveIntegerField()
     ref  = models.CharField(max_length=255)
     email = models.EmailField()

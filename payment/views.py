@@ -98,7 +98,7 @@ def process_order(request):
             request.session['order'] = create_order.pk
             pk = settings.PAYSTACK_PUBLIC_KEY
             #amount = 20
-            payment = Payment.objects.create(amount=amount_paid,email=email,user=user)
+            payment = Payment.objects.create(amount=amount_paid,email=email,user=user,order=create_order)
 
             # add order items
             order_id = create_order.id
@@ -135,7 +135,7 @@ def process_order(request):
             request.session['order'] = create_order.pk
             pk = settings.PAYSTACK_PUBLIC_KEY
             #amount = 20
-            payment = Payment.objects.create(amount=amount_paid,email=email,user=user)
+            payment = Payment.objects.create(amount=amount_paid,email=email,order=create_order)
             #add other items
             order_id = create_order.id
             
