@@ -39,8 +39,8 @@ class Product(models.Model):
     description = models.CharField(max_length=250, blank=True,default="",null=True)
     image = models.ImageField( upload_to='uploads/product_image/')
     is_sale = models.BooleanField(default=False)
-    in_cart = models.BooleanField(default=False)
-    in_wishlist = models.BooleanField(default=False)
+    #in_cart = models.BooleanField(default=False)
+    #in_wishlist = models.BooleanField(default=False)
     sale_price = models.DecimalField(default=0, max_digits=6, decimal_places=2)
     ## others images to be viewed at detailed page
     ## product reviews by customers

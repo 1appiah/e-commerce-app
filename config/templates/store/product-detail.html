@@ -36,17 +36,19 @@
                 <option value='5'>5</option>            
             </select>
         </div>
-        {% if item.in_cart %}
+        {% if in_cart %}
         <button type="button" value="{{item.id}}" id="remove-cart" class="w3-button w3-padding-large w3-section w3-border w3-round-xxlarge "><span>Remove from cart</span></button>
         {% else %}
         <button type="button" value="{{item.id}}" id="add-cart" class="w3-button w3-padding-large w3-border w3-round-xxlarge "><span>Add to cart</span></button>
         {% endif %}
+        {% if user.is_authenticated %}
+            {% if in_wishlist %}
+            <button type="button" value="{{item.id}}" id="remove-wishlist" class="w3-button w3-padding-large w3-section w3-border w3-round-xxlarge "><span>Remove from wishlist</span></button>
+            {% else %}
+            <button type="button" value="{{item.id}}" id="add-wishlist" class="w3-button w3-padding-large w3-border w3-round-xxlarge "><span>Add to wishlist</span></button>
+            {% endif %}  
+        {% endif %}
 
-        {% if item.in_wishlist %}
-        <button type="button" value="{{item.id}}" id="remove-wishlist" class="w3-button w3-padding-large w3-section w3-border w3-round-xxlarge "><span>Remove from wishlist</span></button>
-        {% else %}
-        <button type="button" value="{{item.id}}" id="add-wishlist" class="w3-button w3-padding-large w3-border w3-round-xxlarge "><span>Add to wishlist</span></button>
-        {% endif %}  
     </div>
 </div>
 <div>

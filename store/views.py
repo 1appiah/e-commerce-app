@@ -43,7 +43,19 @@ def productDetail(request,pk):
     item = Product.objects.get(id=pk)
     category = Category.objects.get(name=item.category)
     related_products = Product.objects.filter(category=category).order_by('?')[:4]
-    return render(request,'store/product-detail.html',{'item':item,'obj':related_products})
+    wishlist= WishList.objects.get(customer=request.user.id)
+    if wishlist.products.contains(item):
+        in_wishlist = True
+    else:
+        in_wishlist = False
+    cart = Cart(request)
+    cart_products = cart.get_prods()
+    if item in cart_products:
+        in_cart = True
+    else:
+        in_cart = False
+        print('not in ooo')
+    return render(request,'store/product-detail.html',{'item':item,'obj':related_products,'in_cart':in_cart,'in_wishlist':in_wishlist})
 
 def category(request):
     categories = Category.objects.all()
@@ -121,8 +133,8 @@ def wishlist(request):
                             return HttpResponse("done")
                         else:
                             wishlist.products.add(product)
-                            product.in_wishlist = True
-                            product.save()
+                            #product.in_wishlist = True
+                            #product.save()
                             messages.info(request,'product added to wishlist')
                             return HttpResponse("done")
             else:
@@ -154,8 +166,8 @@ def remove_from_wishlist(request):
             product = Product.objects.get(pk=pk)
             wishlist = WishList.objects.get(customer = request.user)
             wishlist.products.remove(product)
-            product.in_wishlist = False
-            product.save()
+            #product.in_wishlist = False
+            #product.save()
             messages.info(request,'product removed from wishlist')
             return HttpResponse("done")
 
