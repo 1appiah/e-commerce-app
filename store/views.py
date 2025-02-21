@@ -43,19 +43,28 @@ def productDetail(request,pk):
     item = Product.objects.get(id=pk)
     category = Category.objects.get(name=item.category)
     related_products = Product.objects.filter(category=category).order_by('?')[:4]
-    wishlist= WishList.objects.get(customer=request.user.id)
-    if wishlist.products.contains(item):
-        in_wishlist = True
+    if request.user.is_authenticated:
+
+        wishlist= WishList.objects.get(customer=request.user.id)
+        if wishlist.products.contains(item):
+            in_wishlist = True
+        else:
+            in_wishlist = False
+        cart = Cart(request)
+        cart_products = cart.get_prods()
+        if item in cart_products:
+            in_cart = True
+        else:
+            in_cart = False
+        return render(request,'store/product-detail.html',{'item':item,'obj':related_products,'in_cart':in_cart,'in_wishlist':in_wishlist})
     else:
-        in_wishlist = False
-    cart = Cart(request)
-    cart_products = cart.get_prods()
-    if item in cart_products:
-        in_cart = True
-    else:
-        in_cart = False
-        print('not in ooo')
-    return render(request,'store/product-detail.html',{'item':item,'obj':related_products,'in_cart':in_cart,'in_wishlist':in_wishlist})
+        cart = Cart(request)
+        cart_products = cart.get_prods()
+        if item in cart_products:
+            in_cart = True
+        else:
+            in_cart = False
+        return render(request,'store/product-detail.html',{'item':item,'obj':related_products,'in_cart':in_cart,})
 
 def category(request):
     categories = Category.objects.all()
