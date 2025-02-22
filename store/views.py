@@ -42,7 +42,7 @@ def about(request):
 def productDetail(request,pk):
     item = Product.objects.get(id=pk)
     category = Category.objects.get(name=item.category)
-    related_products = Product.objects.filter(category=category).order_by('?')[:4]
+    related_products = Product.objects.filter(category=category).exclude(id=item.id).order_by('?')[:4]
     if request.user.is_authenticated:
 
         wishlist= WishList.objects.get(customer=request.user.id)
