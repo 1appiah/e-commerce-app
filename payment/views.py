@@ -98,7 +98,7 @@ def process_order(request):
         amount_paid = total()
         amount_paid = decimal.Decimal(amount_paid)
         # get address from my_shipping session
-        shipping_address = f"{my_shipping['full_name']}\n{my_shipping['address1']}\n{my_shipping['address2']}\n{my_shipping['state']}\n{my_shipping['zipcode']}\n{my_shipping['country']}"
+        shipping_address = f"{my_shipping['full_name']}\n{my_shipping['address1']}\n{my_shipping['address2']}\n{my_shipping['town']}\n{my_shipping['region']}"
 
         #create order
         if request.user.is_authenticated:

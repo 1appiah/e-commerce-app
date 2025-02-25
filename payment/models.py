@@ -16,10 +16,8 @@ class ShippingAdrress(models.Model):
     phone_number =  models.CharField(max_length=20, blank=True)
     address1 =  models.CharField(max_length=200, blank=True)
     address2 =  models.CharField(max_length=200, blank=True)
-    state =  models.CharField(max_length=200, blank=True, null=True)
-    city =  models.CharField(max_length=200, blank=True, null=True)
-    zipcode =  models.CharField(max_length=200, blank=True)
-    country =  models.CharField(max_length=200, blank=True)
+    town =  models.CharField(max_length=200, blank=True, null=True)
+    region =  models.CharField(max_length=200, blank=True)
     
     def __str__(self) -> str:
         return f'Shipping Address - {str(self.id)}'
