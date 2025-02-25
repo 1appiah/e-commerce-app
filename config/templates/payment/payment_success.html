@@ -1,10 +1,23 @@
 {% extends "partials/base.html" %}
 
+{% block title %}Order payment success{% endblock title %}
 
 {% block content %}
-<header class="w3-padding-large w3-center w3-black">
-    <h1 class="w3-center w3-text-white">Make payments</h1>
-    <h6 class="w3-text-grey">With this shop homepage template</h6>
-</header>
-    money galore
+    
+        <header class="w3-padding-large w3-center w3-black">
+            <h1 class="w3-center w3-text-white">Pollen&Pearls</h1>
+            <h6 class="w3-text-grey">We are here for you</h6>
+        </header>
+        <div class="w3-padding w3-center">
+            <h1>Order Payment Succesful</h1>
+            <span>
+                <i class=" w3-text-green w3-jumbo far fa-check-circle"></i>
+            </span>
+        </div>
+        <div class="w3-center w3-section">
+                <a href="{% url 'home' %}" class="w3-button w3-border w3-blue w3-round"><i class="fas fa-check-circle"></i>  <!-- Solid check circle -->
+                    Home</a>
+                <a href="{% url 'invoice' ref %}" class="w3-button w3-border w3-teal w3-round"><i class="fas fa-file-arrow-down"></i> Receipt</a>
+        </div>
+    
 {% endblock content %}

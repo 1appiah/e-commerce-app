@@ -15,6 +15,7 @@ psycopg2 = "*"
 dj-database-url = "*"
 python-decouple = "*"
 gunicorn = "*"
+pdfkit = "*"
 
 [dev-packages]
 

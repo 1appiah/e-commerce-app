@@ -7,10 +7,19 @@ from django.contrib import messages
 from store.models import Product
 from payment.models import Payment,Invoice
 from django.conf import settings
+from django.template.loader import get_template
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+import pdfkit
+
+
 # Create your views here.
 
-def payment_success(request):
-    return render(request,'payment/payment_success.html')
+def payment_success(request,ref):
+    context={
+        'ref':ref
+    }
+    return render(request,'payment/payment_success.html',context)
 
 def checkout(request):
     cart = Cart(request)
@@ -187,7 +196,7 @@ def verify_payment(request,ref):
         invoice.save()
 
         messages.success(request,"Payment Verified. A Dispatch rider is coming soon")
-        return redirect('home')
+        return redirect('payment-success',ref)
     else:
         messages.warning(request,"Something went wrong with your payment")
 
@@ -209,6 +218,71 @@ def verify_payment(request,ref):
 ### a notification when an order has been delivered or a product has been ordered.
 
 
+## download invoice/receipt
+def invoice(request,ref):
+    invoice = Invoice.objects.get(ref=ref)
+    pk = invoice.order_id
+    order = Order.objects.get(pk=pk)
+    payment = Payment.objects.get(ref=ref)
+    template_path = 'payment/invoice.html'
+    context = {
+        'invoice':invoice,
+        'order':order,
+        'payment':payment
+    }
+   # response = HttpResponse(content_type = 'application/pdf')
+   # # attachment is what's causing the download
+   # #response['Content-Disposition'] = 'attachment; filename="payslip.pdf"'
+   # response['Content-Disposition'] = 'inline; filename="receipt.pdf"'
+##
+##
+    #temp_dir = tempfile.mkdtemp()  
+    ## Render HTML template
+    #html_string = render_to_string(template_path, context)
+#
+#
+#
+    ## Convert HTML to PDF
+    #response = HttpResponse(content_type="application/pdf")
+    #response["Content-Disposition"] = 'inline; filename="invoice.pdf"'
+    #HTML(string=html_string).write_pdf(response, stylesheets=[], presentational_hints=True, tempdir=temp_dir)
+#
+    #with tempfile.NamedTemporaryFile(delete=True) as tmp_file:
+    #    HTML(string=html_string).write_pdf(tmp_file.name)
+    #    tmp_file.seek(0)
+    #    response.write(tmp_file.read())
+#
+    #return response
+
+    #load the HTML template
+    html = render_to_string(template_path, context)
+    options = {
+        "enable-local-file-access": "",  # Allow local CSS/JS
+        "load-error-handling": "ignore",  # Prevent breaking on errors
+        "no-stop-slow-scripts": "",  # Prevent script stopping
+    }
+
+    # Convert HTML to PDF
+    pdf = pdfkit.from_string(html, False, configuration=pdfkit.configuration(wkhtmltopdf=settings.PDFKIT_CONFIG["wkhtmltopdf"]))
+
+    # Create a response with the PDF
+    response = HttpResponse(pdf, content_type="application/pdf")
+    response["Content-Disposition"] = 'inline; filename="invoice.pdf"'
+    
+    return response
+
+
+    #template = get_template(template_path)
+    #html = template.render(context)
+    ##create pdf
+    #pisa_status = pisa.CreatePDF(
+    #    html,dest=response
+    #)
+    ## if error
+    #if pisa_status.err:
+    #    return HttpResponse('we had some errors <pre>' + html + '</pre>')
+    #return response
+    
 
 
 

@@ -199,3 +199,7 @@ LOGIN_URL = 'account_login'
 
 PAYSTACK_SECRET_KEY = 'sk_test_eb2a2510468c127211e2e3e44004eadaced7f7c2'
 PAYSTACK_PUBLIC_KEY='pk_test_6e81f464554e4dde7057617bfca18fba3bdaee32'
+
+PDFKIT_CONFIG = {
+    "wkhtmltopdf": "C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe"
+}

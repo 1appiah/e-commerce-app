@@ -1,0 +1,37 @@
+{% load static %}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>payslip</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    
+</head>
+<body>
+    <header class="w3-padding-large w3-center w3-black">
+        <h1 class="w3-center w3-text-white">Pollen&Pearls</h1>
+        <h6 class="w3-text-grey">We are here for you</h6>
+    </header>
+    <div class="w3-center">
+        <h1>Order Payment Receipt</h1>
+    </div>
+    <div class="w3-row w3-section">
+        
+        <div class="w3-col l4 s6 ">
+            <p >Name : {{order.full_name}}</p>
+            <p>Email : {{payment.email}}</p>
+        </div>
+        <div class="w3-col l8 s6">
+            <p>Receipt : {{payment.ref}}</p>
+            <p>Date : {{payment.date_created}}</p>
+        </div>
+
+    </div>
+</body>
+</html>
