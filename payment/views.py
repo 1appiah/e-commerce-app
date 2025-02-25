@@ -11,6 +11,7 @@ from django.template.loader import get_template
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 import pdfkit
+from django.urls import reverse
 
 
 # Create your views here.
@@ -196,7 +197,8 @@ def verify_payment(request,ref):
         invoice.save()
 
         messages.success(request,"Payment Verified. A Dispatch rider is coming soon")
-        return redirect('payment-success',ref)
+        url = reverse('payment-success', kwargs={'ref': ref})
+        return redirect(url)
     else:
         messages.warning(request,"Something went wrong with your payment")
 
