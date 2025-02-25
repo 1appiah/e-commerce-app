@@ -203,4 +203,9 @@ PAYSTACK_PUBLIC_KEY='pk_test_6e81f464554e4dde7057617bfca18fba3bdaee32'
 PDFKIT_CONFIG = {
     "wkhtmltopdf": "C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe"
 }
-WKHTMLTOPDF_CMD = r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"
+
+
+
+WKHTMLTOPDF_CMD = "/usr/bin/wkhtmltopdf"
+if not os.path.exists(WKHTMLTOPDF_CMD):
+    WKHTMLTOPDF_CMD = "/usr/local/bin/wkhtmltopdf"
