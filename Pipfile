@@ -16,6 +16,7 @@ dj-database-url = "*"
 python-decouple = "*"
 gunicorn = "*"
 pdfkit = "*"
+django-wkhtmltopdf = "*"
 
 [dev-packages]
 
