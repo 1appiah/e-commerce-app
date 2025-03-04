@@ -19,6 +19,8 @@ urlpatterns = [
 
     # search product
     path('search-product',views.search_product,name='search-product'),
+    ## product reviews
+    path('product-reviews/<int:pk>',views.product_reviews,name='product-reviews'),
 
     ##wishlist
     path('wishlist',views.wishlist,name='wishlist'),

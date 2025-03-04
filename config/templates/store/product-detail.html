@@ -1,8 +1,93 @@
 {% extends "partials/base.html" %}
 
+{% load custom_filter %}
+{% load static %}
+
 {% block title %} {{item.name}} {% endblock title %}
 {% block og-caption %}{{item.name}}{% endblock og-caption %}
 {% block og-description %}{{item.name}} is designed by Pollen N Pearls{% endblock og-description %}
+{% block style %}
+<style>
+.boss{display:flex}
+
+/* The container */
+.container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  
+  border-radius: 50%;
+}
+
+.checkmarks{
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  
+  border-radius: 50%;
+}
+
+
+/* When the radio button is checked, add a blue background 
+.container input:checked ~ .checkmark {
+  background-color: yellowgreen;
+}
+*/
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) 
+.container .checkmark:after {
+ 	top: 9px;
+	left: 9px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: white;
+}
+    */
+.back{background-color:yellowgreen}
+
+.vim .gold{
+    color:gold
+}
+</style>
+{% endblock style %}
 
 {% block content %}
 <header class="w3-padding-large w3-center w3-black">
@@ -21,7 +106,7 @@
     <div class="w3-third">
         <img src={{item.image.url}} alt="product_image" style="max-width:100%; height:400px"/>
     </div>
-    <div class="w3-twothird w3-padding-large w3-center w3-border w3-border-red">
+    <div class="w3-twothird w3-padding-large w3-center">
         <h2>{{item.name}}</h2>
         <h4><span>$</span><span>{{item.price}}</span></h4>
         <p class="w3-justify">{{item.description}}{% lorem 1 b %}</p>
@@ -51,6 +136,76 @@
 
     </div>
 </div>
+<!--section to display reviews,additional data and others-->
+<div class="w3-content w3-container w3-border w3-border-grey">
+    <h1>Reviews By Customers</h1>
+    {% for review in product_reviews %}
+        <div class="w3-row w3-section">
+            <div class="w3-col m1 s3 ">
+                <img src="{% static 'img/avatar1.png' %}" alt="image" width='60px' height="60px">
+            </div>
+            <div class="w3-col m11 s9">
+                    {% for _ in review.stars_rating|range_filter %}
+                    <span>
+                        <i class="fas fa-star" style="color: gold;"></i>
+                    </span>
+                    {% endfor %}
+                    
+                    {% for _ in review.remain_stars|range_filter %}
+                    <span>
+                        <i class="fas fa-star"></i>
+                    </span>
+                    {% endfor %}
+                <br>
+                <span>{{review.email}}</span><br>
+                <span>{{review.review}}</span>
+            </div>
+        </div>
+    
+    {% endfor %}
+    <!--portion for creating a review-->
+    <form  method="post" action="{% url 'product-reviews' item.id %}" class="w3-border w3-border-light-grey w3-padding">
+        {% csrf_token %}
+            <h2>Add Review</h2>
+            <div class="boss w3-section ">
+                <label class="container">
+                    <input type="radio"  name="ratings" value="1" required>
+                    <span class="checkmark" onclick="funct(0)"><i class="fas fa-star gold"></i>
+                    </span>
+                  </label>
+                  <label class="container">
+                    <input type="radio" name="ratings" value="2">
+                    <span class="checkmark"  onclick="funct(1)"><i class="fas fa-star gold"></i>
+                    </span>
+                  </label>
+                  <label class="container">
+                    <input type="radio" name="ratings" value="3">
+                    <span class="checkmark" onclick="funct(2)"><i class="fas fa-star gold"></i>
+                    </span>
+                  </label>
+                  <label class="container">
+                    <input type="radio" name="ratings" value="4">
+                    <span class="checkmark" onclick="funct(3)"><i class="fas fa-star gold"></i>
+                    </span>
+                  </label>
+                  <label class="container">
+                    <input type="radio" name="ratings" value="5">
+                    <span class="checkmark" onclick="funct(4)"><i class="fas fa-star gold"></i>
+                    </span>
+                  </label>
+            </div>
+        <br>
+        <p><input type="text" name="email" id="" class="w3-input w3-border" required placeholder="name here..."></p>
+        <textarea name="reviews" id="" class="w3-input w3-border" placeholder="Your feedback...."></textarea>
+        <br>
+        <button type="submit" class="w3-button w3-black w3-center">submit</button>
+
+    </form>
+    <!--end of creating a review-->
+</div>
+
+<!--end of section to display reviews,additional data and others-->
+
 <div>
     <h1 class="w3-center w3-animate-zoom w3-section"><b>RELATED PRODUCTS</b></h1>
     <div class="w3-container w3-row-padding ">
@@ -175,5 +330,26 @@ $(document).on('click','#remove-wishlist',function(e){
         }
     });
 })
+
+
+//// for controlling star ratings
+var i;
+        function funct(n){
+        var x = document.getElementsByClassName("checkmark")
+        for (i = 0; i < x.length; i++) {
+             if (i <= n) {
+                x[i].classList.add("vim")
+
+                console.log(x[i])
+        
+             }
+             else{
+                x[i].classList.remove("vim")
+
+        
+             }
+          }
+        }
+        
 </script>
 {% endblock content %}

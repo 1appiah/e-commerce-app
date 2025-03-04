@@ -1,5 +1,5 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from . models import Product,Category,Profile,WishList
+from . models import Product,Category,Profile,WishList,Product_Reviews
 from payment.models import ShippingAdrress
 from payment.forms import shippingForm
 from django.contrib import messages
@@ -43,8 +43,8 @@ def productDetail(request,pk):
     item = Product.objects.get(id=pk)
     category = Category.objects.get(name=item.category)
     related_products = Product.objects.filter(category=category).exclude(id=item.id).order_by('?')[:4]
+    product_reviews = Product_Reviews.objects.filter(product=item)
     if request.user.is_authenticated:
-
         wishlist= WishList.objects.get(customer=request.user.id)
         if wishlist.products.contains(item):
             in_wishlist = True
@@ -56,7 +56,8 @@ def productDetail(request,pk):
             in_cart = True
         else:
             in_cart = False
-        return render(request,'store/product-detail.html',{'item':item,'obj':related_products,'in_cart':in_cart,'in_wishlist':in_wishlist})
+        context = {'item':item,'obj':related_products,'in_cart':in_cart,'in_wishlist':in_wishlist,'product_reviews':product_reviews}
+        return render(request,'store/product-detail.html',context)
     else:
         cart = Cart(request)
         cart_products = cart.get_prods()
@@ -64,7 +65,8 @@ def productDetail(request,pk):
             in_cart = True
         else:
             in_cart = False
-        return render(request,'store/product-detail.html',{'item':item,'obj':related_products,'in_cart':in_cart,})
+        context = {'item':item,'obj':related_products,'in_cart':in_cart,'product_reviews':product_reviews}
+        return render(request,'store/product-detail.html',context)
 
 def category(request):
     categories = Category.objects.all()
@@ -184,3 +186,18 @@ def remove_from_wishlist(request):
 
 
 ### create a profile for the customer
+
+### product reviews form
+def product_reviews(request,pk):
+    if request.method == 'POST':
+        email = request.POST['email']
+        customer_review = request.POST['reviews']
+        ratings = request.POST['ratings']
+        prod = Product.objects.get(pk=pk)
+        reviews = Product_Reviews(email=email,review=customer_review,stars_rating=ratings,product=prod)
+        reviews.save()
+        print(request.POST)
+        return redirect('product-detail', pk)
+
+    else:
+        return redirect('home')

@@ -92,3 +92,17 @@ def create_wishlist(sender,instance,created,**kwargs):
         pro = WishList(customer=instance)
         pro.save()
 post_save.connect(create_wishlist,sender=User)
+
+
+
+class Product_Reviews(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.SET_NULL, null=True)
+    review = models.TextField()
+    stars_rating = models.PositiveIntegerField(default=0)
+    date = models.DateField(auto_now_add=True)
+    email = models.EmailField(blank=True,null=True)
+    remain_stars =  models.PositiveIntegerField(blank=True,default=0)
+
+    def save(self, *args, **kwargs):
+       self.remain_stars = 5 - int(self.stars_rating)
+       super().save(*args, **kwargs) # Call the real save() method
