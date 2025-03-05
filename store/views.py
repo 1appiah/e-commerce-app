@@ -6,13 +6,14 @@ from django.contrib import messages
 from . forms import UserUpdateForm
 from django.db.models import Q
 import json
-
+from django.contrib.auth import get_user_model
 from cart.cart import Cart
 import random
 from django.http import HttpResponse
 
 
 # Create your views here.
+User = get_user_model()
 
 def home(request):
     if request.user.is_authenticated:
@@ -200,4 +201,42 @@ def product_reviews(request,pk):
         return redirect('product-detail', pk)
 
     else:
+        return redirect('home')
+    
+
+
+
+
+### view to handle url to get referral code and redirect user
+
+def referral_view(request,*args, **kwargs):
+    code = str(kwargs.get('ref_code'))
+    try:
+        profile = Profile.objects.get(code=code)
+        request.session['ref_profile'] = profile.id
+        print('id',profile.id)
+    except:
+        pass
+    print(request.session.get_expiry_age())
+    if request.user.is_authenticated:
+        return render(request,'home')
+    else:
+        return redirect('home')
+
+
+def save_referral_code(request):
+    registered_user  = User.objects.get(id=request.user.id)
+    registered_profile  = Profile.objects.get(user = registered_user)
+    if registered_profile.recommended_by is not None:
+        return redirect('home')
+    try:
+        profile_id = request.session.get('ref_profile')
+        if profile_id is not None:
+            recommended_by_profile = Profile.objects.get(id=profile_id)
+            registered_profile.recommended_by = recommended_by_profile.user
+            registered_profile.save()
+            return redirect('home')
+        else:
+            return redirect('home')
+    except:
         return redirect('home')

@@ -1,5 +1,5 @@
 from django.contrib import admin # type: ignore
-from . models import Category,Product,Profile,Customer,WishList,Product_Reviews
+from . models import Category,Product,Profile,Customer,WishList,Product_Reviews,Discount
 # Register your models here.
 
 admin.site.register(Category)
@@ -8,6 +8,8 @@ admin.site.register(Customer)
 admin.site.register(Product_Reviews)
 admin.site.register(Profile)
 admin.site.register(WishList)
+admin.site.register(Discount)
+
 
 
 

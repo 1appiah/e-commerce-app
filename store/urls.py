@@ -26,4 +26,10 @@ urlpatterns = [
     path('wishlist',views.wishlist,name='wishlist'),
     path('view-wishlist',views.view_wishlist,name='view-wishlist'),
     path('remove-from-wishlist',views.remove_from_wishlist,name='remove-from-wishlist'),
+
+
+    ### to handle referral codes
+    path('referral-view/',views.referral_view,name='referral-view'),
+    path('referral-view/<str:ref_code>/',views.referral_view,name='referral-view'),
+    path('save-referral-code',views.save_referral_code,name="save_referral_code")
 ]

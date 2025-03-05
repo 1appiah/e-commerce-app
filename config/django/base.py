@@ -193,7 +193,7 @@ MEDIA_ROOT = (BASE_DIR/'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'save_referral_code'
 
 LOGIN_URL = 'account_login'
 
@@ -214,3 +214,5 @@ PDFKIT_CONFIG = {
 WKHTMLTOPDF_CMD = "/usr/bin/wkhtmltopdf"
 if not os.path.exists(WKHTMLTOPDF_CMD):
     WKHTMLTOPDF_CMD = "/usr/local/bin/wkhtmltopdf"
+
+

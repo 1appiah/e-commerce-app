@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 import datetime
 from django.urls import reverse
 from django.db.models.signals import post_save
+from . utils import generate_ref_code
+
 # Create your models here.
 
 
@@ -63,8 +65,25 @@ class Profile(models.Model):
     zipcode =  models.CharField(max_length=200, blank=True)
     country =  models.CharField(max_length=200, blank=True)
     old_cart = models.CharField(max_length=200,null=True,blank=True)
+    code = models.CharField(max_length=12, blank=True)
+    recommended_by = models.ForeignKey(User, related_name='ref_by',blank=True,null=True, on_delete=models.CASCADE)
+
     def __str__(self) -> str:
         return self.user.username
+    
+    def get_recommend_profile(self):
+        qs = Profile.objects.all()
+        my_recs = []
+        for profile in qs:
+            if profile.recommended_by == self.user:
+                my_recs.append(profile)
+        return my_recs
+        
+    def save(self, *args, **kwargs):
+       if self.code == "":
+           code = generate_ref_code()
+           self.code = code
+       super().save(*args, **kwargs) # Call the real save() method
 
 # create userprofile
 
@@ -106,3 +125,15 @@ class Product_Reviews(models.Model):
     def save(self, *args, **kwargs):
        self.remain_stars = 5 - int(self.stars_rating)
        super().save(*args, **kwargs) # Call the real save() method
+
+
+
+
+### discount recommenders get from the people they recommended anytime they buy their products
+class Discount(models.Model):
+    user_profile = models.ForeignKey(Profile,related_name='profile_discount',on_delete=models.CASCADE)
+    total_amount = models.DecimalField(max_digits=5, decimal_places=2,default=0)
+
+    def __str__(self):
+        return str(self.user_profile)
+    
