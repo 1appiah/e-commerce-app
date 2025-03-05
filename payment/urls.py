@@ -13,5 +13,8 @@ urlpatterns = [
     path('paid-unshipped-orders',views.paid_unshipped_orders,name='paid-unshipped-orders'),
     path('invoice/<str:ref>',views.invoice,name='invoice'),
     
+    ### views to handle external person paying for the one who made the other
+    path('pay-for-someone/<str:payment_ref>/<int:order_pk>/<int:referer>',views.pay_for_someone,name='pay-for-someone'),
+    path('verify-external/<str:ref>/<int:order_pk>/<int:referer>',views.verify_external,name='verify-external')
 
 ]

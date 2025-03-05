@@ -4,7 +4,7 @@ import datetime
 from django.urls import reverse
 from django.db.models.signals import post_save
 from . utils import generate_ref_code
-
+from django.apps import apps 
 # Create your models here.
 
 
@@ -44,6 +44,11 @@ class Product(models.Model):
     #in_cart = models.BooleanField(default=False)
     #in_wishlist = models.BooleanField(default=False)
     sale_price = models.DecimalField(default=0, max_digits=6, decimal_places=2)
+
+    @property
+    def number_orders(self):
+        Order = apps.get_model('payment', 'Order')
+        return Order.objects.filter(product=self, is_verified=True).count()
     ## others images to be viewed at detailed page
     ## product reviews by customers
     

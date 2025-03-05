@@ -4,7 +4,7 @@ from cart.cart import Cart
 from . models import ShippingAdrress,Order,OrderItems
 from .forms import shippingForm
 from django.contrib import messages
-from store.models import Product
+from store.models import Product,Discount,Profile
 from payment.models import Payment,Invoice
 from django.conf import settings
 from django.template.loader import get_template
@@ -59,9 +59,7 @@ def billing_info(request):
         #create a session with shipping info 
         my_shipping = request.POST
         request.session['my_shipping'] = my_shipping
-
         shipinfo = request.POST 
-    
         context = {
                     'products':products,
                     'shipinfo':shipinfo,
@@ -107,6 +105,14 @@ def process_order(request):
             create_order.save()
             request.session['order'] = create_order.pk
             pk = settings.PAYSTACK_PUBLIC_KEY
+            try:
+                    referer = request.session['ref_profile']
+                    if referer:
+                        referer = referer
+                    else:
+                        referer = 0
+            except:
+                    referer = 0
             #amount = 20
             payment = Payment.objects.create(amount=amount_paid,email=email,user=user,order=create_order)
 
@@ -135,7 +141,9 @@ def process_order(request):
                 'paystack_pub_key':pk,
                 'amount_value':payment.amount_value(),
                 'amount':amount_paid,
-                'create_order':create_order
+                'create_order':create_order,
+                'referer':referer,
+                'order_pk':create_order.pk,
             }
             return render(request,'payment/make_payment.html',context)
 
@@ -144,6 +152,14 @@ def process_order(request):
             create_order.save()
             request.session['order'] = create_order.pk
             pk = settings.PAYSTACK_PUBLIC_KEY
+            try:
+                    referer = request.session['ref_profile']
+                    if referer:
+                        referer_id = referer
+                    else:
+                        referer = 0
+            except:
+                    referer = 0
             #amount = 20
             payment = Payment.objects.create(amount=amount_paid,email=email,order=create_order)
             #add other items
@@ -173,7 +189,9 @@ def process_order(request):
                 'paystack_pub_key':pk,
                 'amount_value':payment.amount_value(),
                 'amount':amount_paid,
-                'create_order':create_order
+                'create_order':create_order,
+                'referer':referer,
+                'order_pk':create_order.pk,
             }
             return render(request,'payment/make_payment.html',context)
 
@@ -195,6 +213,40 @@ def verify_payment(request,ref):
         invoice = Invoice(ref=ref,order_id=obj.pk,amount=obj.amount_paid)
         invoice.name = obj.full_name
         invoice.save()
+        ###
+        discount_amount = decimal.Decimal(0.05)*obj.amount_paid
+        if request.user.is_authenticated:
+            buyer_profile = Profile.objects.get(user=request.user)
+            recommender = buyer_profile.recommended_by
+            if recommender:
+                recommender_discount_model, created = Discount.objects.get_or_create(user_profile = recommender.profile)
+                if created:
+                    recommender_discount_model.total_amount = discount_amount + recommender_discount_model.total_amount
+                    recommender_discount_model.save()
+                else:
+                    recommender_discount_model.total_amount = discount_amount + recommender_discount_model.total_amount
+                    recommender_discount_model.save()
+            else:
+                pass
+        else:
+            try:
+                    referer = request.session['ref_profile']
+                    profile = Profile.objects.get(id=referer)
+                    if profile:
+                        recommender_discount_model, created = Discount.objects.get_or_create(user_profile = profile)
+                        if created:
+                            recommender_discount_model.total_amount = discount_amount + recommender_discount_model.total_amount
+                            recommender_discount_model.save()
+                        else:
+                            recommender_discount_model.total_amount = discount_amount + recommender_discount_model.total_amount
+                            recommender_discount_model.save()
+                    else:
+                        pass
+            except:
+                    pass
+        ##context ={'place_order':pk,'payment':payment}
+        
+        ##
 
         messages.success(request,"Payment Verified. A Dispatch rider is coming soon")
         url = reverse('payment-success', kwargs={'ref': ref})
@@ -203,17 +255,80 @@ def verify_payment(request,ref):
         messages.warning(request,"Something went wrong with your payment")
 
 
+
+
+
+### create a system where someone can send an order to someone to pay for them
+def pay_for_someone(request,*args, **kwargs):
+    order_pk = kwargs['order_pk']
+    ref = kwargs['payment_ref']
+    referer = kwargs['referer']
+    payment = Payment.objects.get(ref=ref)
+    order = Order.objects.get(pk=order_pk)
+    pk = settings.PAYSTACK_PUBLIC_KEY
+
+    context = {
+        'order_pk':order_pk,
+        'payment':payment,
+        'order':order,
+        'paystack_pub_key':pk,
+        'item_amount':order.amount_paid,
+        'amount_value':payment.amount_value(),
+        'referer':referer
+    }
+    return render(request,'payment/pay_for_someone.html',context)
+
+
+### parameters include ref,pk,
+def verify_external(request,*args, **kwargs):
+    pk = kwargs['order_pk']
+    #payment_pk = self.kwargs['payment_pk']
+    ref = kwargs['ref']
+    referer = kwargs['referer']
+
+    payment = Payment.objects.get(ref=ref)
+    verified = payment.verify_payment()
+
+    if verified:
+        order = Order.objects.get(pk=pk)
+        order.is_verified = True
+        order.save()
+
+        invoice = Invoice(ref=ref,order_id=order.pk,amount=order.amount_paid)
+        invoice.name = order.full_name
+        invoice.save()
+        ### part to calculate discount and add it the user who recommended this buyer
+        # discount of two percent will be given to the recommender == 0.02*total order amount
+        try:
+            profile = Profile.objects.get(id=referer)
+            discount_amount = decimal.Decimal(0.05)*order.amount_paid
+            if profile:
+                recommender_discount_model, created = Discount.objects.get_or_create(user_profile = profile)
+                if created:
+                    recommender_discount_model.total_amount = discount_amount + recommender_discount_model.total_amount
+                    recommender_discount_model.save()
+                else:
+                    recommender_discount_model.total_amount = discount_amount + recommender_discount_model.total_amount
+                    recommender_discount_model.save()
+            else:
+                pass
+
+        except:
+            pass
+
+        context ={'place_order':pk,'payment':payment}
+        messages.success(request,"Payment Verified.")
+        url = reverse('payment-success', kwargs={'ref': ref})
+        return redirect(url)
+    else:
+        messages.warning(request,'Order not process, try again')
+        return redirect('/')
 #def pay_on_delivery(request,pk):
 #    delivery = get_object_or_404(Order,pk=pk)
 #    delivery.pay_on_delivery = True
 #    delivery.save()
 #    messages.success(request,"Dispatch rider is coming soon, remember to pay on pickup/delivery")
 #    return redirect('dashboard')
-
-
-
-
-### create a system where someone can send an order to someone to pay for them
 
 
 
@@ -232,29 +347,6 @@ def invoice(request,ref):
         'order':order,
         'payment':payment
     }
-   # response = HttpResponse(content_type = 'application/pdf')
-   # # attachment is what's causing the download
-   # #response['Content-Disposition'] = 'attachment; filename="payslip.pdf"'
-   # response['Content-Disposition'] = 'inline; filename="receipt.pdf"'
-##
-##
-    #temp_dir = tempfile.mkdtemp()  
-    ## Render HTML template
-    #html_string = render_to_string(template_path, context)
-#
-#
-#
-    ## Convert HTML to PDF
-    #response = HttpResponse(content_type="application/pdf")
-    #response["Content-Disposition"] = 'inline; filename="invoice.pdf"'
-    #HTML(string=html_string).write_pdf(response, stylesheets=[], presentational_hints=True, tempdir=temp_dir)
-#
-    #with tempfile.NamedTemporaryFile(delete=True) as tmp_file:
-    #    HTML(string=html_string).write_pdf(tmp_file.name)
-    #    tmp_file.seek(0)
-    #    response.write(tmp_file.read())
-#
-    #return response
 
     #load the HTML template
     html = render_to_string(template_path, context)
@@ -272,20 +364,6 @@ def invoice(request,ref):
     response["Content-Disposition"] = 'inline; filename="invoice.pdf"'
     
     return response
-
-
-    #template = get_template(template_path)
-    #html = template.render(context)
-    ##create pdf
-    #pisa_status = pisa.CreatePDF(
-    #    html,dest=response
-    #)
-    ## if error
-    #if pisa_status.err:
-    #    return HttpResponse('we had some errors <pre>' + html + '</pre>')
-    #return response
-    
-
 
 
 

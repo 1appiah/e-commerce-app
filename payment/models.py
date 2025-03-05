@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from store.models import Product
+from django.apps import apps 
 from django.db.models.signals import post_save,pre_save
 from django.dispatch import receiver
 import datetime
@@ -59,7 +59,7 @@ def set_shipped_date_on_update(sender,instance, **kwargs):
 
 class OrderItems(models.Model):
     order = models.ForeignKey("Order", on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey('store.Product', on_delete=models.CASCADE)
     user = models.ForeignKey(User , on_delete=models.CASCADE, null=True,blank=True)
 
     quantity = models.PositiveIntegerField(default=1)

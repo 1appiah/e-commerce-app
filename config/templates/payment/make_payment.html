@@ -6,13 +6,26 @@
 
 {% block content %}
 <script src="https://js.paystack.co/v1/inline.js"></script>
-<div class="w3-padding-large w3-panel">
-    <h4 class="w3-center w3-padding-large">About Paying {{amount}} to deliver package</h4>
+<header class="w3-padding-large w3-center w3-black">
+    <h1 class="w3-center w3-text-white">Make Payments</h1>
+    <h6 class="w3-text-grey">It is worth every price</h6>
+</header>
+<div class="w3-padding w3-panel">
+    <h4 class="w3-center w3-padding">About Paying {{amount}} for your order</h4>
 </div>
 
-<div class="w3-padding-large w3-panel w3-center">
-    <button class="w3-button w3-border w3-section w3-round w3-green" onclick="paywithPaystack()">Pay</button>
+<div class="w3-padding w3-panel w3-center">
+    <button class="w3-button w3-border w3-round w3-green" onclick="paywithPaystack()">Pay</button>
 </div>
+
+<div class="w3-padding w3-center w3-grey">
+    <h3 class="w3-center w3-text-white">Let A Love One Pay For You</h3>
+    <h6 class="w3-text-black">Copy and Share the link below with them</h6>
+    <input readonly type="text" class="w3-border w3-border-blue" value="http://127.0.0.1:8000/payment/pay-for-someone/{{payment.ref}}/{{order_pk}}/{{referer}}" id="linking">
+    <button class="w3-button w3-border" onclick="myFunctions()" title="copy">⏺️</button>
+</div>
+
+
 
 
 <script>
@@ -41,5 +54,14 @@
         var handler = PaystackPop.setup(obj);
         handler.openIframe();
     }
+    
+    function myFunctions() {
+        var copyText = document.getElementById("linking");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999)
+        document.execCommand("copy");
+        
+      }
+    
 </script>
 {% endblock content %}
