@@ -12,23 +12,126 @@
 <div class="w3-content">
     <div class="w3-row-padding">
         <div class="w3-half">
-           <h3>Profile Information Information</h3>
-           <form method="POST" action={% url "update-profile" %}>
-            {% csrf_token %}
-            {{form.as_p}}
-            <button type="submit">Update</button>
-           </form> 
+           <h3>Profile Information</h3>
+           <div>
+            {% if pro.full_name %}
+            <p>Name:{{pro.full_name}}</p>
+            {% endif %}
+            {% if pro.phone %}
+            <p>Name:{{pro.phone}}</p>
+            {% endif %}
+            {% if pro.address1 %}
+            <p>Name:{{pro.address1}}</p>
+            {% endif %}
+            {% if pro.city%}
+            <p>Name:{{pro.city}}</p>
+            {% endif %}
+            <button onclick="document.getElementById('profile').style.display='block'" class="w3-button w3-round w3-brown">Update Profile</button>
+           </div>
+
+           <div class="w3-modal" id="profile">
+            <form class="w3-modal-content w3-container" method="POST" action={% url "update-profile" %}>
+                <h2>Update Your Profile</h2>
+                <hr>
+                {% csrf_token %}
+                {{form.as_p}}
+                <button class="w3-blue w3-button w3-round" type="submit">Update</button>
+                <span onclick="document.getElementById('profile').style.display='none'" 
+                class="w3-button w3-red w3-round">Cancel</span>
+               </form>
+           </div> 
         </div>
         <div class="w3-half">
             <h3>Shipping Information</h3>
-           <form method="POST" action={% url "update-shipping-address" %}>
-            {% csrf_token %}
-            {{form1.as_p}}
-            <button type="submit">Update</button>
-           </form> 
+            <div>
+                {% if ship.full_name %}
+                <p>Name:{{ship.full_name}}</p>
+                {% endif %}
+                {% if ship.phone_number %}
+                <p>Name:{{ship.phone_number}}</p>
+                {% endif %}
+                {% if ship.address1 %}
+                <p>Name:{{ship.address1}}</p>
+                {% endif %}
+                {% if pro.town%}
+                <p>Name:{{pro.town}}</p>
+                {% endif %}
+                <button onclick="document.getElementById('shipping').style.display='block'" class="w3-button w3-round w3-purple">Update Shipping Info</button>
+               </div>
+               <div class="w3-modal" id="shipping">
+                <form class="w3-modal-content w3-container" method="POST" action={% url "update-shipping-address" %}>
+                    <h2>Update Your Shipping Info</h2>
+                    <hr>
+                    {% csrf_token %}
+                    {{form1.as_p}}
+                    <button class="w3-blue w3-button w3-round" type="submit">Update</button>
+                    <span onclick="document.getElementById('shipping').style.display='none'" 
+                    class="w3-button w3-red w3-round">Cancel</span>
+                   </form>
+               </div>
         </div>
     </div>
+    <!--for orders-->
+    <div class="w3-section">
+        <h2>Paid Orders</h2>
+        <table class="w3-table-all w3-bordered w3-striped">
+            <thead>
+                <tr class="w3-black">
+                    <th>Order</th> 
+                    <th>Price</th>
+                    <th>Customer Email</th>
+                    <th>Date Shipped</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in paid_orders %}
+                
+                <tr>
+                    
+                    <td><a href="{% url 'order-detail' order.pk %}">{{order.pk}}</a></td>
+                    <td>{{order.amount_paid}}</td>
+                    <td>{{order.email}}</td>
+                    <td>{{order.date_shipped}}</td> 
+                </tr>
+                
+                {% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+    <!--portion for unpaid orders-->
+    <div class="w3-section">
+        <h2>Unpaid Orders</h2>
+        <table class="w3-table-all w3-bordered w3-striped">
+            <thead>
+                <tr class="w3-black">
+                    <th>Order</th> 
+                    <th>Price</th>
+                    <th>Customer Email</th>
+                    <th>Date Shipped</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in unpaid_orders %}
+                
+                <tr>
+                    
+                    <td><a href="{% url 'order-detail' order.pk %}">{{order.pk}}</a></td>
+                    <td>{{order.amount_paid}}</td>
+                    <td>{{order.email}}</td>
+                    <td>{{order.date_shipped}}</td> 
+                </tr>
+                
+                {% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+    <!--end for orders-->
 </div>
 
+<script>
+
+</script>
 
 {% endblock content %}

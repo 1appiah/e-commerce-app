@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from . models import Product,Category,Profile,WishList,Product_Reviews
-from payment.models import ShippingAdrress
+from payment.models import ShippingAdrress,Order
 from payment.forms import shippingForm
 from django.contrib import messages
 from . forms import UserUpdateForm
@@ -83,6 +83,8 @@ def categoryDetails(request,pk):
 def update_profile(request):
     pro = Profile.objects.get(user=request.user)
     ship =  ShippingAdrress.objects.get(user__id=request.user.id)
+    paid_orders = Order.objects.filter(user=request.user,is_verified = True).order_by('-date_ordered')
+    unpaid_orders = Order.objects.filter(user=request.user,is_verified = False).order_by('-date_ordered')
     if request.method == 'POST':
         form = UserUpdateForm(request.POST,instance=pro)
         if form.is_valid():
@@ -96,7 +98,10 @@ def update_profile(request):
     context = {
         'form':form,
         'pro':pro,
-        'form1':form1
+        'form1':form1,
+        'ship':ship,
+        'paid_orders':paid_orders,
+        'unpaid_orders':unpaid_orders,
     }
     return render(request,'store/update_user.html',context)
 
