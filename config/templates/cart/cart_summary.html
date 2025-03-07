@@ -20,50 +20,56 @@ Cart
 {% endif %}
 
 {% if cart_products %}
-{% for item in cart_products %}
-<div class="w3-content">
-<div class=" w3-row w3-border w3-section">
-    <div class="w3-third">
-        <img src={{item.image.url}} alt="product_image" style="width:100%;"/>
-    </div>
-    <div class="w3-twothird w3-padding-large w3-center">
-        <h2>{{item.name}}</h2>
-        {% if item.is_sale %}
-        <h4>${{item.sale_price}}</h4>
-        {% else %}
-        <h4>${{item.price}}</h4>
-        {% endif %}
-        <div class="w3-section w3-content" style="max-width:200px">
-            <select class="w3-select w3-border" id="select{{item.id}}">
-                <option selected>
-                    {% for key, value  in quantities.items %}
-                        {% if key == item.id|slugify %}
-                            {{value}}
-                        {% endif %}
-                    {% endfor %}
-                </option>
-                <option value='1'>1</option>
-                <option value='2'>2</option>
-                <option value='3'>3</option>
-                <option value='4'>4</option>
-                <option value='5'>5</option>            
-            </select>
+<div class="w3-row-padding w3-content">
+    <div class="w3-col l9 m9 s3">
+    {% for item in cart_products %}
+        <div class="w3-row w3-border w3-section">
+            <div class="w3-third">
+                <img src={{item.image.url}} alt="product_image" style="width:100%;"/>
+            </div>
+            <div class="w3-twothird w3-padding-large w3-center">
+                <h2>{{item.name}}</h2>
+                {% if item.is_sale %}
+                <h4>${{item.sale_price}}</h4>
+                {% else %}
+                <h4>${{item.price}}</h4>
+                {% endif %}
+                <div class="w3-section w3-content" style="max-width:200px">
+                    <select class="w3-select w3-border" id="select{{item.id}}">
+                        <option selected>
+                            {% for key, value  in quantities.items %}
+                                {% if key == item.id|slugify %}
+                                    {{value}}
+                                {% endif %}
+                            {% endfor %}
+                        </option>
+                        <option value='1'>1</option>
+                        <option value='2'>2</option>
+                        <option value='3'>3</option>
+                        <option value='4'>4</option>
+                        <option value='5'>5</option>            
+                    </select>
+                </div>
+                <a class="w3-button w3-round w3-border w3-grey" href="{% url 'product-detail' item.id %}">View</a>
+                <button type="button" class="w3-button w3-round w3-blue update-cart" data-index="{{item.id}}">Update</button>
+                <button type="button" class="w3-button w3-round w3-red delete-cart" data-index="{{item.id}}">Delete</button>
+            
+            
+            </div>
         </div>
-        <a class="w3-button w3-round w3-border w3-grey" href="{% url 'product-detail' item.id %}">View</a>
-        <button type="button" class="w3-button w3-round w3-blue update-cart" data-index="{{item.id}}">Update</button>
-        <button type="button" class="w3-button w3-round w3-red delete-cart" data-index="{{item.id}}">Delete</button>
-
-
+    {% endfor %}
     </div>
+    <div class="w3-col l3 m3 s12 w3-section w3-border">
+        <h2>Cart Totals</h2>
+        <div class=" w3-padding-large">
+        <p class="">Total  <span class="w3-right">${{total}}</span></p>
+        <a href={% url 'checkout' %} class="w3-button w3-block w3-green">checkout</a>
+        </div>
+    </div>
+
 </div>
-</div>
-{% endfor %}
-<div>
-    <p class="w3-right">Total : ${{total}}<br> <a href={% url 'checkout' %} class="w3-button w3-green">checkout</a></p>
-</div>
-<div class="w3-clear"></div>
 {% else %}
-<div class="w3-container w3-padding-large">
+<div class="w3-container w3-padding-large ">
     <h2>There is nothing in your cart</h2>
 </div>
 {% endif %}

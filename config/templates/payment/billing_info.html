@@ -40,40 +40,38 @@
             <tfooter>
                 <tr>
                     <td></td>
-                    <td>Total Cost</td>
-                    <td>${{total}}  <a href="{% url 'cart-summary' %}" class="w3-button w3-brown">Update Items</a></td>
+
                 </tr>
             </tfooter>
         </table>
-    
+        <p> Total Cost: <b>${{total}}</b> <p>
+        <a href="{% url 'cart-summary' %}" class="w3-button w3-teal">Update Items</a>
     </div>
     <!--end of order summary-->
     <div>
         <h3><b>Shipping Info</b></h3>
-        <div class="w3-border">
+        <div class="w3-border w3-container">
                 {% csrf_token %}
                
          
-                Name: {{shipinfo.full_name}} <br>
-                Email:{{shipinfo.email}}<br>
-                Address 1:{{shipinfo.address1}}<br>
-                Address 2:{{shipinfo.address2}}<br>
-                Phone:{{shipinfo.phone_number}}<br>
-                Region:{{shipinfo.region}}<br>
+                <b>Name</b>: {{shipinfo.full_name}} <br>
+                <b>Email</b>:{{shipinfo.email}}<br>
+                <b>Address 1</b>:{{shipinfo.address1}}<br>
+                <b>Address 2</b>:{{shipinfo.address2}}<br>
+                <b>Phone:</b>{{shipinfo.phone_number}}<br>
+                <b>Region:</b>{{shipinfo.region}}
                 
                 <hr>
-                <a href="{% url 'checkout' %}" class="w3-button w3-section w3-round w3-purple w3-border">Update Shipping Details</a>
-                
-
+                <a href="{% url 'checkout' %}" class="w3-button w3-section w3-round w3-blue w3-border">Update Shipping Details</a>
         </div>
     </div>
     <!--end of shipping info-->
     <div>
-        <form class="w3-border" method="POST" action="{% url 'process-order' %}">
+        <form class="w3-border w3-container" method="POST" action="{% url 'process-order' %}">
             {% csrf_token %}
-            <h3>Make payment to complete order</h3>
+            <h3><b>Make Payment</b></h3>
             
-        <button class="w3-button w3-green w3-round-large" type="submit">Pay Now</button>
+        <button class="w3-button w3-green  w3-section w3-round-large" type="submit">Pay Now</button>
 
         </form>
     </div>

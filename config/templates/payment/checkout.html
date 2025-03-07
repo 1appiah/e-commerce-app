@@ -40,11 +40,12 @@
             <tfooter>
                 <tr>
                     <td></td>
-                    <td>Total Cost</td>
-                    <td>${{total}}  <a href="{% url 'cart-summary' %}" class="w3-button w3-brown">Update Items</a></td>
+                    
                 </tr>
             </tfooter>
         </table>
+        <p> Total Cost: <b>${{total}}</b> <p>
+        <a href="{% url 'cart-summary' %}" class="w3-button w3-teal">Update Items</a>
     
     </div>
     <!--end of order summary-->
@@ -54,7 +55,7 @@
             <form method="POST" action="{% url 'billing_info' %}">
                 {% csrf_token %}
                 {{shipform.as_p}}
-                <button>Continue To Billing</button>
+                <button class="w3-blue w3-button w3-border w3-round-large">Continue To Billing</button>
             </form>
 
         </div>
