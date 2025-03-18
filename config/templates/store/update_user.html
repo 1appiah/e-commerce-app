@@ -7,7 +7,20 @@
     <h6 class="w3-text-grey">With you every step of the walk</h6>
 </header>
 <div class="w3-center">
-    <h1 class="w3-center">{{pro}}</h1>
+    <h1 class="w3-center">{{pro|upper}}</h1>
+</div>
+<div class="w3-container">
+    <h2>Total Referral Bonus</h2>
+    <p>Send the referral link below to receive 5% of your referral expenses in our store</p>
+    <p class="w3-border w3-border-grey w3-padding">
+        <a>https://e-commerce-app-1p3q.onrender.com/referral-view/{{request.user.profile.code}}/</a>
+    </p>
+    {% if discount.total_amount > 0 %}
+    <p><b>Referral Bonus</b>: {{discount.total_amount}} GHS</p>
+    {% else %}
+    <p>Let people register with your referral code to get 5% on their purchases here</p>
+    {% endif %}
+
 </div>
 <div class="w3-content">
     <div class="w3-row-padding">

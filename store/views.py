@@ -1,5 +1,5 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from . models import Product,Category,Profile,WishList,Product_Reviews
+from . models import Product,Category,Profile,WishList,Product_Reviews,Discount
 from payment.models import ShippingAdrress,Order
 from payment.forms import shippingForm
 from django.contrib import messages
@@ -81,6 +81,7 @@ def categoryDetails(request,pk):
 
 ### updating the profile of users -
 def update_profile(request):
+    discount = Discount.objects.get(user_profile = request.user.profile)
     pro = Profile.objects.get(user=request.user)
     ship =  ShippingAdrress.objects.get(user__id=request.user.id)
     paid_orders = Order.objects.filter(user=request.user,is_verified = True).order_by('-date_ordered')
@@ -102,6 +103,7 @@ def update_profile(request):
         'ship':ship,
         'paid_orders':paid_orders,
         'unpaid_orders':unpaid_orders,
+        'discount':discount,
     }
     return render(request,'store/update_user.html',context)
 
@@ -224,7 +226,7 @@ def referral_view(request,*args, **kwargs):
         pass
     print(request.session.get_expiry_age())
     if request.user.is_authenticated:
-        return render(request,'home')
+        return redirect('home')
     else:
         return redirect('home')
 
