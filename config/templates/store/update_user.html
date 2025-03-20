@@ -15,7 +15,7 @@
     <p class="w3-border w3-border-grey w3-padding">
         <a>https://e-commerce-app-1p3q.onrender.com/referral-view/{{request.user.profile.code}}/</a>
     </p>
-    {% if discount.total_amount > 0 %}
+    {% if discount %}
     <p><b>Referral Bonus</b>: {{discount.total_amount}} GHS</p>
     {% else %}
     <p>Let people register with your referral code to get 5% on their purchases here</p>

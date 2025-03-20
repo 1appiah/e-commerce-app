@@ -81,7 +81,10 @@ def categoryDetails(request,pk):
 
 ### updating the profile of users -
 def update_profile(request):
-    discount = Discount.objects.get(user_profile = request.user.profile)
+    try:
+        discount = Discount.objects.get(user_profile = request.user.profile)
+    except:
+        discount = 0
     pro = Profile.objects.get(user=request.user)
     ship =  ShippingAdrress.objects.get(user__id=request.user.id)
     paid_orders = Order.objects.filter(user=request.user,is_verified = True).order_by('-date_ordered')
